@@ -32,9 +32,20 @@ if command -v python3 &>/dev/null && python3 --version &>/dev/null; then
 elif command -v python &>/dev/null && python --version &>/dev/null; then
   PYTHON=python
 else
-  echo "  ERROR: Python not found. Cannot merge settings.json."
-  echo "  Please install Python 3 and re-run."
-  exit 1
+  # Fallback: search common Windows Python install locations
+  PYTHON=""
+  for p in /c/Users/*/AppData/Local/Programs/Python/Python3*/python.exe \
+           /c/Python3*/python.exe; do
+    if [ -x "$p" ] && "$p" --version &>/dev/null; then
+      PYTHON="$p"
+      break
+    fi
+  done
+  if [ -z "$PYTHON" ]; then
+    echo "  ERROR: Python not found. Cannot merge settings.json."
+    echo "  Please install Python 3 and re-run."
+    exit 1
+  fi
 fi
 
 "$PYTHON" -c "
