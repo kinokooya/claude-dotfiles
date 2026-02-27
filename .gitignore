@@ -1,0 +1,3 @@
+# Claude Code project files (not part of dotfiles)
+.claude/
+.claude.json
